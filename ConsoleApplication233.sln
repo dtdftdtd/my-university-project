@@ -1,36 +1,275 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.10.35122.118
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConsoleApplication233", "ConsoleApplication233\ConsoleApplication233.vcxproj", "{F1C34C29-3C41-4CCC-B5BF-D953CCBF5D0F}"
-EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SharedProject1", "SharedProject1\SharedProject1.shproj", "{C70FB2CB-F11E-4436-AE56-627D248DB184}"
-EndProject
-Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
-		Release|x64 = Release|x64
-		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F1C34C29-3C41-4CCC-B5BF-D953CCBF5D0F}.Debug|x64.ActiveCfg = Debug|x64
-		{F1C34C29-3C41-4CCC-B5BF-D953CCBF5D0F}.Debug|x64.Build.0 = Debug|x64
-		{F1C34C29-3C41-4CCC-B5BF-D953CCBF5D0F}.Debug|x86.ActiveCfg = Debug|Win32
-		{F1C34C29-3C41-4CCC-B5BF-D953CCBF5D0F}.Debug|x86.Build.0 = Debug|Win32
-		{F1C34C29-3C41-4CCC-B5BF-D953CCBF5D0F}.Release|x64.ActiveCfg = Release|x64
-		{F1C34C29-3C41-4CCC-B5BF-D953CCBF5D0F}.Release|x64.Build.0 = Release|x64
-		{F1C34C29-3C41-4CCC-B5BF-D953CCBF5D0F}.Release|x86.ActiveCfg = Release|Win32
-		{F1C34C29-3C41-4CCC-B5BF-D953CCBF5D0F}.Release|x86.Build.0 = Release|Win32
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {2931C919-35F8-46CB-8432-B544841D4582}
-	EndGlobalSection
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		SharedProject1\SharedProject1.projitems*{c70fb2cb-f11e-4436-ae56-627d248db184}*SharedItemsImports = 13
-	EndGlobalSection
-EndGlobal
+#include<iostream>
+#include<string>
+#include<cmath>
+#include<vector>
+#include<cstdlib>
+using namespace std;
+
+class student
+{
+public:
+	enum edit_choice { name = 1, age = 2, id = 3 };
+	enum delete_choice { delete_name = 1, delete_age = 2, delete_id = 3 };
+
+	struct infos
+	{
+		vector<string>vnames;
+		vector<int>vages;
+		vector<int>vids;
+
+		string name;
+		int age;
+		int id;
+
+
+		string new_name;
+		int new_age;
+		int new_id;
+
+		string delete_name = "";
+		int delete_age = 0;
+		int delete_id = 0;
+
+		int edit_choice;
+		int id_to_check;
+		int id_to_delete;
+		int delete_choice;
+	};
+	infos info;
+	int st_num;
+	virtual int students_number()
+	{
+		cout << "enter students number:";
+		cin >> this->st_num;
+		system("cls");
+		return st_num;
+	}
+	int Students_number = students_number();
+	void add_student(infos& info, int& number)
+	{
+		for (int i = 0; i <= number - 1; i++)
+		{
+			cout << "enter student " << i + 1 << " name:";
+			cin.ignore(1, '\n');
+			getline(cin, info.name);
+			info.vnames.push_back(info.name);
+			cout << endl;
+
+
+			cout << "enter student " << i + 1 << " age:";
+			cin >> info.age;
+			info.vages.push_back(info.age);
+			cout << endl;
+
+
+			cout << "enter student " << i + 1 << " id:";
+			cin >> info.id;
+			info.vids.push_back(info.id);
+			cout << endl;
+
+			info.vnames.shrink_to_fit();
+			system("cls");
+
+
+		}
+	}
+	void print_infos(infos info, int number)
+	{
+		for (int i = 0; i <= number - 1; i++)
+		{
+			cout << "student " << i + 1 << " name:" << info.vnames.at(i) << endl;
+			cout << "student " << i + 1 << " age:" << info.vages.at(i) << endl;
+			cout << "student " << i + 1 << " id:" << info.vids.at(i) << endl;
+			cout << "------------------------------------\n";
+		}
+	}
+
+	edit_choice editing_menu(infos info)
+	{
+		cout << "edit name:input 1->\n";
+		cout << "edit age:input 2->\n";
+		cout << "edit id:input 3->\n";
+		cin >> info.edit_choice;
+		system("cls");
+		return (edit_choice)info.edit_choice;
+	}
+	void edit_infos(infos& info, int number)
+	{
+		cout << "enter id of students you wanna edit:";
+		cin >> info.new_id;
+		cout << endl;
+		system("cls");
+		for (int i = 0; i <= number - 1; i++)
+		{
+			if (info.new_id != info.vids.at(i) && i == number - 1)
+			{
+				cout << "this student isn't existed!\n";
+				break;
+			}
+			else if (info.new_id == info.vids.at(i))
+			{
+				switch (this->editing_menu(info))
+				{
+				case edit_choice::name:
+					cout << "enter student " << i + 1 << " new name:";
+					cin.ignore(1, '\n');
+					getline(cin, info.new_name);
+					info.vnames.at(i) = info.new_name;
+					cout << endl;
+					system("cls");
+					break;
+				case edit_choice::age:
+					cout << "enter student " << i + 1 << " new age:";
+					cin >> info.new_age;
+					info.vages.at(i) = info.new_age;
+					cout << endl;
+					system("cls");
+					break;
+				case edit_choice::id:
+					cout << "enter student " << i + 1 << " new id:";
+					cin >> info.new_id;
+					info.vids.at(i) = info.new_id;
+					cout << endl;
+					system("cls");
+					break;
+				}
+				break;
+			}
+			else
+			{
+				continue;
+			}
+		}
+	}
+	void print_infos_after_edit(infos info, int number)
+	{
+		for (int i = 0; i <= number - 1; i++)
+		{
+			cout << "student " << i + 1 << " new name:" << info.vnames.at(i) << endl;
+			cout << "student " << i + 1 << " new age:" << info.vages.at(i) << endl;
+			cout << "student " << i + 1 << " new id:" << info.vids.at(i) << endl;
+			cout << "------------------------------------\n";
+		}
+	}
+
+	delete_choice delete_menu(infos& info)
+	{
+		cout << "delete name:input 1->\n";
+		cout << "delte age:input 2->\n";
+		cout << "delete id:input 3->\n";
+		cin >> info.delete_choice;
+		system("cls");
+		return (delete_choice)info.delete_choice;
+	}
+	void delete_student(infos& info, int number)
+	{
+		cout << "enter id of student you wanna delete:";
+		cin >> info.id_to_delete;
+		system("cls");
+		for (int i = 0; i <= number - 1; i++)
+		{
+			if (info.id_to_delete != info.vids.at(i) && i == number - 1)
+			{
+				cout << "this student isn't existed!\n";
+				break;
+			}
+			else if (info.id_to_delete == info.vids.at(i))
+			{
+				switch (this->delete_menu(info))
+				{
+				case delete_choice::delete_name:
+					info.vnames.at(i) = info.delete_name;
+					cout << endl;
+					system("cls");
+					break;
+				case delete_choice::delete_age:
+
+					info.vages.at(i) = info.delete_age;
+					cout << endl;
+					system("cls");
+					break;
+				case delete_choice::delete_id:
+
+					info.vids.at(i) = info.delete_id;
+					cout << endl;
+					system("cls");
+					break;
+				}
+				break;
+			}
+			else
+			{
+				continue;
+			}
+		}
+	}
+	void print_infos_after_delete(infos info, int number)
+	{
+		for (int i = 0; i <= number - 1; i++)
+		{
+			cout << "student " << i + 1 << " new name:" << info.vnames.at(i) << endl;
+			cout << "student " << i + 1 << " new age:" << info.vages.at(i) << endl;
+			cout << "student " << i + 1 << " new id:" << info.vids.at(i) << endl;
+			cout << "------------------------------------\n";
+		}
+	}
+
+};
+
+
+class courses :public student
+{
+public:
+	struct st_course
+	{
+		vector<string>vcourses_names;
+		string course_name;
+	};
+	int read_number_of_courses()
+	{
+		cout << "enter number of courses:";
+		cin >> this->courses_number;
+		cout << endl;
+		return courses_number;
+	}
+	int courses_number = read_number_of_courses();
+	st_course course;
+	void add_course(st_course& course, int& number)
+	{
+		for (int i = 0; i <= number - 1; i++)
+		{
+			cout << "enter course " << i + 1 << " name:";
+			cin >> course.course_name;
+			course.vcourses_names.push_back(course.course_name);
+			cout << endl;
+			system("cls");
+		}
+	}
+	void print_courses(st_course course, int number)
+	{
+		for (int i = 0; i <= number - 1; i++)
+		{
+			cout << "course " << i + 1 << " :" << course.vcourses_names[i] << endl;
+			cout << "----------------------------------\n";
+		}
+	}
+};
+
+
+int main()
+{
+	student st;
+	st.add_student(st.info, st.Students_number);
+	st.print_infos(st.info, st.Students_number);
+	st.edit_infos(st.info, st.Students_number);
+	st.print_infos_after_edit(st.info, st.Students_number);
+
+	//st.delete_student(st.info, st.Students_number);
+	//st.print_infos_after_delete(st.info, st.Students_number);
+
+
+
+	courses cu;
+
+	return 0;
+}
